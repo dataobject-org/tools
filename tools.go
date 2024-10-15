@@ -928,17 +928,6 @@ func appendSQLfile(filename, comment string, mfile *os.File) (nLines int, e erro
 	return
 }
 
-/*func trimPAD(code, pad_formats string) (tcode string) { //pad_formats: 0000,00
-	tcode = code
-	if len(pad_formats) > 0 {
-		ff := strings.Split(pad_formats, ",")
-		for _, f := range ff {
-			tcode = strings.TrimSuffix(tcode, f)
-		}
-	}
-	return
-}*/
-
 func PrepareMetaSQL() (nLines int, e error) {
 	dirRun, dirRes := base.GetRunDir(), base.GetResDir()
 	nLines = 0
@@ -1008,8 +997,7 @@ func PrepareMetaSQL() (nLines int, e error) {
 						case base.MySQL:
 							sqlsql += base.MySQLEscape(string(b))
 						}
-						//identifier->code
-						sqlsql += " where code='" + identifier + "';"
+						sqlsql += " where code='" + identifier + "';" //identifier->code
 						efile.Write([]byte(sqlsql + "#*#Event trigger definition\n"))
 						nLines += 1
 					}
