@@ -1009,8 +1009,14 @@ func PrepareMetaSQL() (nLines int, e error) {
 					}
 				} else if strings.HasSuffix(fname, ".table") {
 					writer := bufio.NewWriter(mfile)
-					definition, _, e = object.Extend(dirRes, identifier, "", "", "", base.SysAcceptMultipleLanguage())
-					if e == nil {
+					fileobject := filepath.Join(dirRes, "res", identifier+".object")
+					if base.IsExists(fileobject) {
+						b, e := ioutil.ReadFile(fileobject)
+						if e == nil {
+							definition, _ = object.DefinitionTextExtend(string(b), identifier, base.SysAcceptMultipleLanguage())
+						}
+					}
+					if len(definition) > 0 {
 						n := 0
 						n, e = Tablefile2SQL(identifier, definition, filename, comment, "", writer)
 						if e == nil {
@@ -1019,8 +1025,14 @@ func PrepareMetaSQL() (nLines int, e error) {
 					}
 				} else if strings.HasSuffix(fname, ".hierarchy") {
 					writer := bufio.NewWriter(mfile)
-					definition, _, e = object.Extend(dirRes, identifier, "", "", "", base.SysAcceptMultipleLanguage())
-					if e == nil {
+					fileobject := filepath.Join(dirRes, "res", identifier+".object")
+					if base.IsExists(fileobject) {
+						b, e := ioutil.ReadFile(fileobject)
+						if e == nil {
+							definition, _ = object.DefinitionTextExtend(string(b), identifier, base.SysAcceptMultipleLanguage())
+						}
+					}
+					if len(definition) > 0 {
 						n := 0
 						n, e = Hierarchyfile2SQL(identifier, definition, filename, comment, "", 0, 0, writer)
 						if e == nil {
