@@ -940,13 +940,12 @@ func PrepareMetaSQL() (nLines int, e error) {
 			comment := base.Meta_data.Filecomment(fname)
 			filename := filepath.Join(dirRes, "res", fname)
 			if base.IsExists(filename) {
-				identifier := ""
+				identifier, definition := "", ""
 				ss := strings.Split(fname, ".")
 				if len(ss) > 0 {
 					identifier = ss[0]
 				}
 				if strings.HasSuffix(fname, ".object") {
-					definition := ""
 					definition, _, e = object.Extend(dirRes, identifier, "", "", "", base.SysAcceptMultipleLanguage())
 					if e == nil {
 						sqlsql, entitysql, ee := object.Definition2SQL(definition, identifier, "deepdata", base.DB_type, "", "")
@@ -1010,22 +1009,20 @@ func PrepareMetaSQL() (nLines int, e error) {
 					}
 				} else if strings.HasSuffix(fname, ".table") {
 					writer := bufio.NewWriter(mfile)
-					var b []byte
-					b, e := ioutil.ReadFile(filename)
+					definition, _, e = object.Extend(dirRes, identifier, "", "", "", base.SysAcceptMultipleLanguage())
 					if e == nil {
 						n := 0
-						n, e = Tablefile2SQL(identifier, string(b), filename, comment, "", writer)
+						n, e = Tablefile2SQL(identifier, definition, filename, comment, "", writer)
 						if e == nil {
 							nLines += n
 						}
 					}
 				} else if strings.HasSuffix(fname, ".hierarchy") {
 					writer := bufio.NewWriter(mfile)
-					var b []byte
-					b, e := ioutil.ReadFile(filename)
+					definition, _, e = object.Extend(dirRes, identifier, "", "", "", base.SysAcceptMultipleLanguage())
 					if e == nil {
 						n := 0
-						n, e = Hierarchyfile2SQL(identifier, string(b), filename, comment, "", 0, 0, writer)
+						n, e = Hierarchyfile2SQL(identifier, definition, filename, comment, "", 0, 0, writer)
 						if e == nil {
 							nLines += n
 						}
